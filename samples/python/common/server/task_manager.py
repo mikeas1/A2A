@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Union, AsyncIterable, List
+from typing import Union, AsyncIterable, List, Any
 from common.types import Task
 from common.types import (
     JSONRPCResponse,
@@ -72,6 +72,10 @@ class TaskManager(ABC):
     async def on_resubscribe_to_task(
         self, request: TaskResubscriptionRequest
     ) -> Union[AsyncIterable[SendTaskResponse], JSONRPCResponse]:
+        pass
+
+    @abstractmethod
+    async def on_info(self, data: Any) -> Any:
         pass
 
 

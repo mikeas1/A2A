@@ -1,5 +1,5 @@
 from starlette.applications import Starlette
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, PlainTextResponse
 from sse_starlette.sse import EventSourceResponse
 from starlette.requests import Request
 from common.types import (
@@ -46,6 +46,7 @@ class A2AServer:
         self.app.add_route(
             "/.well-known/agent.json", self._get_agent_card, methods=["GET"]
         )
+        self.app.add_route("/authenticate", self._handle_auth_callback, methods=["GET"])
 
     def start(self):
         if self.agent_card is None:
@@ -92,6 +93,11 @@ class A2AServer:
 
         except Exception as e:
             return self._handle_exception(e)
+        
+    async def _handle_auth_callback(self, request: Request) -> PlainTextResponse:
+        # Get pending request thread to begin handling requests once more.
+        await self.task_manager.on_info({"state": request.query_params.get("state"), "url": str(request.url)})
+        return PlainTextResponse("Successfully authenticated. Task will continue processing in the background.")
 
     def _handle_exception(self, e: Exception) -> JSONResponse:
         if isinstance(e, json.decoder.JSONDecodeError):
