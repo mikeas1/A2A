@@ -1,10 +1,11 @@
 from common.server import A2AServer
 from common.types import AgentCard, AgentCapabilities, AgentSkill, MissingAPIKeyError
 from task_manager import AgentTaskManager
-from agent import ReimbursementAgent
+from agent import BirthdayAgent
 import click
 import os
 import logging
+import traceback
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -15,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 @click.command()
 @click.option("--host", default="localhost")
-@click.option("--port", default=10002)
+@click.option("--port", default=10008)
 def main(host, port):
     try:
         # Check for API key only if Vertex AI is not configured
@@ -27,25 +28,32 @@ def main(host, port):
         
         capabilities = AgentCapabilities(streaming=True)
         skill = AgentSkill(
-            id="process_reimbursement",
-            name="Process Reimbursement Tool",
-            description="Helps with the reimbursement process for users given the amount and purpose of the reimbursement.",
-            tags=["reimbursement"],
-            examples=["Can you reimburse me $20 for my lunch with the clients?"],
+            id="generate_events",
+            name="Event Planner",
+            description="Think of fun, age-appropriate events to do during a birthday party.",
+            tags=["birthday", "creative"],
+            examples=["What kind of things should we do during the party?"],
+        )
+        skill2 = AgentSkill(
+            id="plan_dates",
+            name="Date Planner",
+            description="Find good dates when the birthday party could be held.",
+            tags=["birthday", "creative"],
+            examples=["When should I hold the party?"],
         )
         agent_card = AgentCard(
-            name="Reimbursement Agent",
-            description="This agent handles the reimbursement process for the employees given the amount and purpose of the reimbursement.",
+            name="Birthday Agent",
+            description="This agent helps plan super fun birthday parties.",
             url=f"http://{host}:{port}/",
             version="1.0.0",
-            defaultInputModes=ReimbursementAgent.SUPPORTED_CONTENT_TYPES,
-            defaultOutputModes=ReimbursementAgent.SUPPORTED_CONTENT_TYPES,
+            defaultInputModes=BirthdayAgent.SUPPORTED_CONTENT_TYPES,
+            defaultOutputModes=BirthdayAgent.SUPPORTED_CONTENT_TYPES,
             capabilities=capabilities,
-            skills=[skill],
+            skills=[skill, skill2],
         )
         server = A2AServer(
             agent_card=agent_card,
-            task_manager=AgentTaskManager(agent=ReimbursementAgent()),
+            task_manager=AgentTaskManager(agent=BirthdayAgent(["http://localhost:10007"])),
             host=host,
             port=port,
         )
@@ -55,6 +63,7 @@ def main(host, port):
         exit(1)
     except Exception as e:
         logger.error(f"An error occurred during server startup: {e}")
+        traceback.print_exc()
         exit(1)
     
 if __name__ == "__main__":

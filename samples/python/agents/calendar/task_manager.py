@@ -31,7 +31,7 @@ class AgentTaskManager(InMemoryTaskManager):
         self.agent = agent
 
     async def on_info(self, data: Any) -> Any:
-       self.agent.handle_auth(data["state"], data["url"])
+       await self.agent.handle_auth(data["state"], data["url"])
        return
 
     async def _stream_generator(

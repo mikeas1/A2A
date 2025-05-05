@@ -74,7 +74,6 @@ class TaskManager(ABC):
     ) -> Union[AsyncIterable[SendTaskResponse], JSONRPCResponse]:
         pass
 
-    @abstractmethod
     async def on_info(self, data: Any) -> Any:
         pass
 

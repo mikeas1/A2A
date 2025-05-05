@@ -32,6 +32,7 @@ from common.types import (
 )
 
 
+
 class HostAgent:
   """The host agent.
 
@@ -230,9 +231,9 @@ def convert_part(part: Part, tool_context: ToolContext):
     return part.data
   elif part.type == "file":
     # Repackage A2A FilePart to google.genai Blob
-    # Currently not considering plain text as files    
+    # Currently not considering plain text as files
     file_id = part.file.name
-    file_bytes = base64.b64decode(part.file.bytes)    
+    file_bytes = base64.b64decode(part.file.bytes)
     file_part = types.Part(
       inline_data=types.Blob(
         mime_type=part.file.mimeType,
@@ -241,5 +242,5 @@ def convert_part(part: Part, tool_context: ToolContext):
     tool_context.actions.skip_summarization = True
     tool_context.actions.escalate = True
     return DataPart(data = {"artifact-file-id": file_id})
-  return f"Unknown type: {p.type}"
+  return f"Unknown type: {part.type}"
 

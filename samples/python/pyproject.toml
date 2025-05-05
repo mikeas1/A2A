@@ -24,6 +24,7 @@ members = [
     "agents/crewai",
     "agents/google_adk",
     "agents/calendar",
+    "agents/birthday",
     "agents/langgraph",
     "agents/marvin",
     "hosts/cli",

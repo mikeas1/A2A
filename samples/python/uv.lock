@@ -11,6 +11,7 @@ resolution-markers = [
 members = [
     "a2a-sample-agent-adk",
     "a2a-sample-agent-adk-calendar",
+    "a2a-sample-agent-birthday",
     "a2a-sample-agent-langgraph",
     "a2a-sample-client-cli",
     "a2a-sample-client-multiagent",
@@ -47,6 +48,27 @@ requires-dist = [
 name = "a2a-sample-agent-adk-calendar"
 version = "0.1.0"
 source = { editable = "agents/calendar" }
+dependencies = [
+    { name = "a2a-samples" },
+    { name = "click" },
+    { name = "google-adk" },
+    { name = "google-genai" },
+    { name = "python-dotenv" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "a2a-samples", editable = "." },
+    { name = "click", specifier = ">=8.1.8" },
+    { name = "google-adk", specifier = ">=0.0.3" },
+    { name = "google-genai", specifier = ">=1.9.0" },
+    { name = "python-dotenv", specifier = ">=1.1.0" },
+]
+
+[[package]]
+name = "a2a-sample-agent-birthday"
+version = "0.1.0"
+source = { editable = "agents/birthday" }
 dependencies = [
     { name = "a2a-samples" },
     { name = "click" },

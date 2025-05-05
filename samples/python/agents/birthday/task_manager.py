@@ -18,15 +18,16 @@ from common.types import (
     SendTaskStreamingResponse,
 )
 from common.server.task_manager import InMemoryTaskManager
-from agent import ReimbursementAgent
+from agent import BirthdayAgent
 import common.server.utils as utils
 from typing import Union
 import logging
+import traceback
 logger = logging.getLogger(__name__)
 
 class AgentTaskManager(InMemoryTaskManager):
 
-    def __init__(self, agent: ReimbursementAgent):
+    def __init__(self, agent: BirthdayAgent):
         super().__init__()
         self.agent = agent
 
@@ -39,19 +40,28 @@ class AgentTaskManager(InMemoryTaskManager):
           async for item in self.agent.stream(query, task_send_params.sessionId):
             is_task_complete = item["is_task_complete"]
             artifacts = None
+            print(f"======= AGENT ITEM ========\n{item}\n============================")
             if not is_task_complete:
               task_state = TaskState.WORKING
               parts = [{"type": "text", "text": item["updates"]}]
             else:
               if isinstance(item["content"], dict):
+                data = None
+                resptext = None
                 if ("response" in item["content"]
                     and "result" in item["content"]["response"]):
-                  data = json.loads(item["content"]["response"]["result"])
+                  if isinstance(item["content"]["response"]["result"], list):
+                    resptext = "\n".join(item["content"]["response"]["result"])
+                  else:
+                    data = json.loads(item["content"]["response"]["result"])
                   task_state = TaskState.INPUT_REQUIRED
                 else:
                   data = item["content"]
                   task_state = TaskState.COMPLETED
-                parts = [{"type": "data", "data": data}]
+                if data:
+                    parts = [{"type": "data", "data": data}]
+                else:
+                    parts = [{"type": "text", "text": resptext}]
               else:
                 task_state = TaskState.COMPLETED
                 parts = [{"type": "text", "text": item["content"]}]
@@ -60,10 +70,11 @@ class AgentTaskManager(InMemoryTaskManager):
           task_status = TaskStatus(state=task_state, message=message)
           await self._update_store(task_send_params.id, task_status, artifacts)
           task_update_event = TaskStatusUpdateEvent(
-                id=task_send_params.id,
-                status=task_status,
-                final=False,
-            )
+                  id=task_send_params.id,
+                  status=task_status,
+                  final=False,
+              )
+          print(f"YIELDING A2A TASK RESPONSE\n{task_update_event}")
           yield SendTaskStreamingResponse(id=request.id, result=task_update_event)
           # Now yield Artifacts too
           if artifacts:
@@ -76,7 +87,7 @@ class AgentTaskManager(InMemoryTaskManager):
                   )
               )
           if is_task_complete:
-            yield SendTaskStreamingResponse(
+              yield SendTaskStreamingResponse(
               id=request.id,
               result=TaskStatusUpdateEvent(
                   id=task_send_params.id,
@@ -85,9 +96,10 @@ class AgentTaskManager(InMemoryTaskManager):
                   ),
                   final=True
               )
-            )
+              )
         except Exception as e:
             logger.error(f"An error occurred while streaming the response: {e}")
+            traceback.print_exc()
             yield JSONRPCResponse(
                 id=request.id,
                 error=InternalError(
@@ -99,12 +111,12 @@ class AgentTaskManager(InMemoryTaskManager):
     ) -> None:
         task_send_params: TaskSendParams = request.params
         if not utils.are_modalities_compatible(
-            task_send_params.acceptedOutputModes, ReimbursementAgent.SUPPORTED_CONTENT_TYPES
+            task_send_params.acceptedOutputModes, BirthdayAgent.SUPPORTED_CONTENT_TYPES
         ):
             logger.warning(
                 "Unsupported output mode. Received %s, Support %s",
                 task_send_params.acceptedOutputModes,
-                ReimbursementAgent.SUPPORTED_CONTENT_TYPES,
+                BirthdayAgent.SUPPORTED_CONTENT_TYPES,
             )
             return utils.new_incompatible_types_error(request.id)
     async def on_send_task(self, request: SendTaskRequest) -> SendTaskResponse:

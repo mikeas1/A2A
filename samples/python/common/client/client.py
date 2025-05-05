@@ -1,6 +1,6 @@
 import httpx
 from httpx_sse import connect_sse
-from typing import Any, AsyncIterable
+from typing import Any, AsyncIterable, Iterable
 from common.types import (
     AgentCard,
     GetTaskRequest,
@@ -50,6 +50,22 @@ class A2AClient:
                     raise A2AClientJSONError(str(e)) from e
                 except httpx.RequestError as e:
                     raise A2AClientHTTPError(400, str(e)) from e
+                
+    def send_task_streaming_sync(
+        self, payload: dict[str, Any]
+    ) -> Iterable[SendTaskStreamingResponse]:
+        request = SendTaskStreamingRequest(params=payload)
+        with httpx.Client(timeout=None) as client:
+            with connect_sse(
+                client, "POST", self.url, json=request.model_dump()
+            ) as event_source:
+                try:
+                    for sse in event_source.iter_sse():
+                        yield SendTaskStreamingResponse(**json.loads(sse.data))
+                except json.JSONDecodeError as e:
+                    raise A2AClientJSONError(str(e)) from e
+                except httpx.RequestError as e:
+                    raise A2AClientHTTPError(400, str(e)) from e    
 
     async def _send_request(self, request: JSONRPCRequest) -> dict[str, Any]:
         async with httpx.AsyncClient() as client:

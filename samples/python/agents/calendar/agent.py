@@ -8,6 +8,7 @@ from urllib.parse import urlparse, parse_qs
 from google.adk.agents.llm_agent import LlmAgent
 from google.adk.tools.tool_context import ToolContext
 from google.adk.artifacts import InMemoryArtifactService
+from google.adk.events import Event
 from google.adk.memory.in_memory_memory_service import InMemoryMemoryService
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
@@ -16,89 +17,6 @@ from google.genai import types
 
 # Local cache of created request_ids for demo purposes.
 request_ids = set()
-
-def create_request_form(date: Optional[str] = None, amount: Optional[str] = None, purpose: Optional[str] = None) -> dict[str, Any]:
-  """
-   Create a request form for the employee to fill out.
-   
-   Args:
-       date (str): The date of the request. Can be an empty string.
-       amount (str): The requested amount. Can be an empty string.
-       purpose (str): The purpose of the request. Can be an empty string.
-       
-   Returns:
-       dict[str, Any]: A dictionary containing the request form data.
-   """
-  request_id = "request_id_" + str(random.randint(1000000, 9999999))
-  request_ids.add(request_id)
-  return {
-      "request_id": request_id,
-      "date": "<transaction date>" if not date else date,
-      "amount": "<transaction dollar amount>" if not amount else amount,
-      "purpose": "<business justification/purpose of the transaction>" if not purpose else purpose,
-  }
-
-def return_form(
-    form_request: dict[str, Any],    
-    tool_context: ToolContext,
-    instructions: Optional[str] = None) -> dict[str, Any]:
-  """
-   Returns a structured json object indicating a form to complete.
-   
-   Args:
-       form_request (dict[str, Any]): The request form data.
-       tool_context (ToolContext): The context in which the tool operates.
-       instructions (str): Instructions for processing the form. Can be an empty string.       
-       
-   Returns:
-       dict[str, Any]: A JSON dictionary for the form response.
-   """  
-  if isinstance(form_request, str):
-    form_request = json.loads(form_request)
-
-  tool_context.actions.skip_summarization = True
-  tool_context.actions.escalate = True
-  form_dict = {
-      'type': 'form',
-      'form': {
-        'type': 'object',
-        'properties': {
-            'date': {
-                'type': 'string',
-                'format': 'date',
-                'description': 'Date of expense',
-                'title': 'Date',
-            },
-            'amount': {
-                'type': 'string',
-                'format': 'number',
-                'description': 'Amount of expense',
-                'title': 'Amount',
-            },
-            'purpose': {
-                'type': 'string',
-                'description': 'Purpose of expense',
-                'title': 'Purpose',
-            },
-            'request_id': {
-                'type': 'string',
-                'description': 'Request id',
-                'title': 'Request ID',
-            },
-        },
-        'required': list(form_request.keys()),
-      },
-      'form_data': form_request,
-      'instructions': instructions,
-  }
-  return json.dumps(form_dict)
-
-def reimburse(request_id: str) -> dict[str, Any]:
-  """Reimburse the amount of money to the employee for a given request_id."""
-  if request_id not in request_ids:
-    return {"request_id": request_id, "status": "Error: Invalid request_id."}
-  return {"request_id": request_id, "status": "approved"}
-
 
 class CalendarAgent:
   """An agent that manages a calendar."""
@@ -112,6 +30,7 @@ class CalendarAgent:
     self._user_id = "remote_agent"
     self._card = card
     self._waiting_sessions = {}
+    print(f"USING OAUTH CREDS:\n client_id = {client_id}\nclient_secret={client_secret}")
     calendar_tool_set.configure_auth(client_id=client_id, client_secret=client_secret)
     self._runner = Runner(
         app_name=self._agent.name,
@@ -121,8 +40,32 @@ class CalendarAgent:
         memory_service=InMemoryMemoryService(),
     )
 
-  def handle_auth(self, session_id, auth_response_uri):
-    self._waiting_sessions[session_id].set_result(auth_response_uri)
+  async def handle_auth(self, state, auth_response_uri):
+    waiting_func_details = self._waiting_sessions[state]
+    auth_config = waiting_func_details["auth_config"]
+    oauth2_obj = auth_config["exchanged_auth_credential"]["oauth2"]
+    oauth2_obj["auth_response_uri"] = auth_response_uri
+    oauth2_obj["redirect_uri"] = waiting_func_details["redirect_uri"]
+    auth_content = types.Content(
+      role='user',
+      parts=[
+          types.Part(
+              function_response=types.FunctionResponse(
+                  id=waiting_func_details["auth_request_function_call_id"],
+                  name='adk_request_credential',
+                  response=auth_config
+              )
+          )
+      ],
+    )
+    session_id = waiting_func_details["session_id"]
+    # Go run the model. This is problematic, but without immediately running the model,
+    # ADK seems to ignore the FunctionResponse event.
+    # This is going to complete running the function, process the response with the LLM, then
+    # ignore the results.
+    async for event in self._process_events(session_id, auth_content):
+      print(f"====== AUTH EVENT ======\n{event}\n========")
+    del self._waiting_sessions[state]
     return
 
   def invoke(self, query, session_id) -> str:
@@ -172,6 +115,7 @@ class CalendarAgent:
       print(f"====== EVENT =====\n{event}\n=========")
       if (auth_request_function_call := get_auth_request_function_call(event)):
           print("Found an authenticated function call requirement")
+          self._debug_auth(session_id)
           if not (auth_request_function_call_id := auth_request_function_call.id):
             raise ValueError(f'Cannot get function call id from function call: {auth_request_function_call}')
           auth_config = get_auth_config(auth_request_function_call)
@@ -185,10 +129,14 @@ class CalendarAgent:
           query_params_dict = parse_qs(parsed_auth_uri.query)
           state_token = query_params_dict['state'][0]
           auth_request_uri = base_auth_uri + f'&redirect_uri={redirect_uri}'
-          # Need to suspend here until we get the auth code, then restart the event loop.
-          loop = asyncio.get_running_loop()
-          future = loop.create_future()
-          self._waiting_sessions[state_token] = future
+          # Map auth state token to the suspended function call.
+          self._waiting_sessions[state_token] = {
+            "auth_request_function_call_id": auth_request_function_call_id,
+            "auth_config": auth_config,
+            "redirect_uri": redirect_uri,
+            "session_id": session_id,
+            "invocation_id": event.invocation_id,
+          }
           yield {
             "is_task_complete": False,
             "input_required": True,
@@ -219,31 +167,10 @@ class CalendarAgent:
           "updates": "Processing the request...",
         }
 
-    if future:
-      auth_response_uri = await future
-      print("===== I'M FREEEEEE =======")
-      del self._waiting_sessions[state_token]
-      # Update the received AuthConfig with the callback details
-      oauth2_obj = auth_config["exchanged_auth_credential"]["oauth2"]
-      oauth2_obj["auth_response_uri"] = auth_response_uri
-      # Also include the redirect_uri used, as the token exchange might need it
-      oauth2_obj["redirect_uri"] = redirect_uri
-
-      # Construct the FunctionResponse Content object
-      auth_content = types.Content(
-          role='user', # Role can be 'user' when sending a FunctionResponse
-          parts=[
-              types.Part(
-                  function_response=types.FunctionResponse(
-                      id=auth_request_function_call_id,       # Link to the original request
-                      name='adk_request_credential', # Special framework function name
-                      response=auth_config # Send back the *updated* AuthConfig
-                  )
-              )
-          ],
-      )
-      async for event in self._process_events(session_id, auth_content):
-        yield event
+  def _debug_auth(self, session_id):
+    session = self._runner.session_service.get_session(app_name=self._agent.name, user_id=self._user_id, session_id=session_id)
+    for event in session.events:
+      print(f"====== PAST EVENT =====\n{event}\n=========")
 
   def _build_agent(self) -> LlmAgent:
     """Builds the LLM agent for the calendar agent."""
@@ -259,7 +186,7 @@ class CalendarAgent:
 
     Format requests to interact with the calendar using well-formed RFC3339 dates.
 
-    Today is Thursday, May 1, 2025.
+    Today is Monday, May 5, 2025.
     """,
         tools=calendar_tool_set.get_tools(),
     )

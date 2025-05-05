@@ -24,7 +24,7 @@ def main(host, port):
                 raise MissingAPIKeyError(
                     "GOOGLE_API_KEY environment variable not set and GOOGLE_GENAI_USE_VERTEXAI is not TRUE."
                 )
-        
+        print(f"STARTUP: {os.getenv('AGENT_CLIENT_ID')}")
         capabilities = AgentCapabilities(streaming=True)
         availability_skill = AgentSkill(
             id="check_availability",
