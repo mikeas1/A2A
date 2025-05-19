@@ -14,9 +14,18 @@
         "url": "https://google.com"
       },
       "version": "1.0.0",
-      "authentication": {
-        "schemes": "OAuth2"
+      "securitySchemes": {
+        "google": {
+          "type": "openIdConnect",
+          "openIdConnectUrl": "https://accounts.google.com/.well-known/openid-configuration",
+          "scopes": {
+            "openid": "openid",
+            "profile": "profile",
+            "email": "email",
+          }
+        }
       },
+      "security": {"google": ["openid", "profile", "email"]},
       "defaultInputModes": [
         "text/plain"
       ],

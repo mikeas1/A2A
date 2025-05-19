@@ -43,9 +43,29 @@ interface AgentCard {
   };
   // Authentication requirements for the agent.
   // Intended to match OpenAPI authentication structure.
-  authentication: {
-    schemes: string[]; // e.g. Basic, Bearer
-    credentials?: string; //credentials a client should use for private cards
+  securitySchemes?: {
+    [scheme: string]: {
+      type: string;
+      description?: string;
+      name?: string;
+      in?: string;
+      scheme?: string;
+      bearerFormat?: string;
+      flows?: {
+        [flow in "implicit" | "password" | "clientCredentials" | "authorizationCode"]: {
+          authorizationUrl: string;
+          tokenUrl: string;
+          refreshUrl?: string;
+          scopes: {
+            [scope: string]: string;
+          };
+        };
+      };
+      openIdConnectUrl?: string;
+    };
+  };
+  security?: {
+    [scheme: string]: string[];
   };
   // The set of interaction modes that the agent
   // supports across all skills. This can be overridden per-skill.
