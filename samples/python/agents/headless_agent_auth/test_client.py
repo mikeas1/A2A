@@ -14,6 +14,7 @@ from a2a.types import (
     GetTaskRequest,
     Message,
     MessageSendParams,
+    OAuth2SecurityScheme,
     SendMessageRequest,
     SendStreamingMessageRequest,
     Task,
@@ -42,9 +43,10 @@ class AgentAuth(httpx.Auth):
 
         client_creds_flow = next(
             (
-                scheme.flows.clientCredentials
-                for scheme in self.agent_card.securitySchemes
-                if scheme.type == 'oauth2' and scheme.flows.clientCredentials
+                scheme.root.flows.clientCredentials
+                for scheme in self.agent_card.securitySchemes.values()
+                if isinstance(scheme.root, OAuth2SecurityScheme)
+                and scheme.root.flows.clientCredentials
             ),
             None,
         )
