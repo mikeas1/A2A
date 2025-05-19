@@ -18,11 +18,6 @@
         "google": {
           "type": "openIdConnect",
           "openIdConnectUrl": "https://accounts.google.com/.well-known/openid-configuration",
-          "scopes": {
-            "openid": "openid",
-            "profile": "profile",
-            "email": "email",
-          }
         }
       },
       "security": {"google": ["openid", "profile", "email"]},
