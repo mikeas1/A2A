@@ -25,17 +25,6 @@ export interface AgentCapabilities {
 }
 
 /**
- * Defines authentication requirements for an agent.
- * Intended to match OpenAPI authentication structure.
- */
-export interface AgentAuthentication {
-  /** e.g. Basic, Bearer */
-  schemes: string[];
-  /** credentials a client should use for private cards */
-  credentials?: string;
-}
-
-/**
  * Represents a unit of capability that an agent can perform.
  */
 export interface AgentSkill {
@@ -103,8 +92,6 @@ export interface AgentCard {
   documentationUrl?: string;
   /** Optional capabilities supported by the agent. */
   capabilities: AgentCapabilities;
-  /** Authentication requirements for the agent. */
-  authentication: AgentAuthentication;
   /** Security scheme details used for authenticating with this agent. */
   securitySchemes?: { [scheme: string]: SecurityScheme };
   /** Security requirements for contacting the agent. */

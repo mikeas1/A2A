@@ -96,26 +96,6 @@
             ],
             "type": "object"
         },
-        "AgentAuthentication": {
-            "description": "Defines authentication requirements for an agent.\nIntended to match OpenAPI authentication structure.",
-            "properties": {
-                "credentials": {
-                    "description": "credentials a client should use for private cards",
-                    "type": "string"
-                },
-                "schemes": {
-                    "description": "e.g. Basic, Bearer",
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                }
-            },
-            "required": [
-                "schemes"
-            ],
-            "type": "object"
-        },
         "AgentCapabilities": {
             "description": "Defines optional capabilities supported by an agent.",
             "properties": {
@@ -137,10 +117,6 @@
         "AgentCard": {
             "description": "An AgentCard conveys key information:\n- Overall details (version, name, description, uses)\n- Skills: A set of capabilities the agent can perform\n- Default modalities/content types supported by the agent.\n- Authentication requirements",
             "properties": {
-                "authentication": {
-                    "$ref": "#/definitions/AgentAuthentication",
-                    "description": "Authentication requirements for the agent."
-                },
                 "capabilities": {
                     "$ref": "#/definitions/AgentCapabilities",
                     "description": "Optional capabilities supported by the agent."
@@ -212,7 +188,6 @@
                 }
             },
             "required": [
-                "authentication",
                 "capabilities",
                 "defaultInputModes",
                 "defaultOutputModes",
