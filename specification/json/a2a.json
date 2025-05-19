@@ -303,6 +303,36 @@
             ],
             "type": "object"
         },
+        "AuthorizationCodeOAuthFlow": {
+            "description": "Configuration details for a supported OAuth Flow",
+            "properties": {
+                "authorizationUrl": {
+                    "description": "The authorization URL to be used for this flow. This MUST be in the form of a URL. The OAuth2\nstandard requires the use of TLS",
+                    "type": "string"
+                },
+                "refreshUrl": {
+                    "description": "The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL. The OAuth2\nstandard requires the use of TLS.",
+                    "type": "string"
+                },
+                "scopes": {
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "description": "The available scopes for the OAuth2 security scheme. A map between the scope name and a short\ndescription for it. The map MAY be empty.",
+                    "type": "object"
+                },
+                "tokenUrl": {
+                    "description": "The token URL to be used for this flow. This MUST be in the form of a URL. The OAuth2 standard\nrequires the use of TLS.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "authorizationUrl",
+                "scopes",
+                "tokenUrl"
+            ],
+            "type": "object"
+        },
         "CancelTaskRequest": {
             "description": "JSON-RPC request model for the 'tasks/cancel' method.",
             "properties": {
@@ -369,6 +399,31 @@
             "required": [
                 "jsonrpc",
                 "result"
+            ],
+            "type": "object"
+        },
+        "ClientCredentialsOAuthFlow": {
+            "description": "Configuration details for a supported OAuth Flow",
+            "properties": {
+                "refreshUrl": {
+                    "description": "The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL. The OAuth2\nstandard requires the use of TLS.",
+                    "type": "string"
+                },
+                "scopes": {
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "description": "The available scopes for the OAuth2 security scheme. A map between the scope name and a short\ndescription for it. The map MAY be empty.",
+                    "type": "object"
+                },
+                "tokenUrl": {
+                    "description": "The token URL to be used for this flow. This MUST be in the form of a URL. The OAuth2 standard\nrequires the use of TLS.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "scopes",
+                "tokenUrl"
             ],
             "type": "object"
         },
@@ -667,6 +722,31 @@
             "required": [
                 "scheme",
                 "type"
+            ],
+            "type": "object"
+        },
+        "ImplicitOAuthFlow": {
+            "description": "Configuration details for a supported OAuth Flow",
+            "properties": {
+                "authorizationUrl": {
+                    "description": "The authorization URL to be used for this flow. This MUST be in the form of a URL. The OAuth2\nstandard requires the use of TLS",
+                    "type": "string"
+                },
+                "refreshUrl": {
+                    "description": "The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL. The OAuth2\nstandard requires the use of TLS.",
+                    "type": "string"
+                },
+                "scopes": {
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "description": "The available scopes for the OAuth2 security scheme. A map between the scope name and a short\ndescription for it. The map MAY be empty.",
+                    "type": "object"
+                }
+            },
+            "required": [
+                "authorizationUrl",
+                "scopes"
             ],
             "type": "object"
         },
@@ -1115,54 +1195,23 @@
             ],
             "type": "object"
         },
-        "OAuthFlow": {
-            "description": "Configuration details for a supported OAuth Flow",
-            "properties": {
-                "authorizationUrl": {
-                    "description": "The authorization URL to be used for this flow. This MUST be in the form of a URL. The OAuth2\nstandard requires the use of TLS",
-                    "type": "string"
-                },
-                "refreshUrl": {
-                    "description": "The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL. The OAuth2\nstandard requires the use of TLS.",
-                    "type": "string"
-                },
-                "scopes": {
-                    "additionalProperties": {
-                        "type": "string"
-                    },
-                    "description": "The available scopes for the OAuth2 security scheme. A map between the scope name and a short\ndescription for it. The map MAY be empty.",
-                    "type": "object"
-                },
-                "tokenUrl": {
-                    "description": "The token URL to be used for this flow. This MUST be in the form of a URL. The OAuth2 standard\nrequires the use of TLS.",
-                    "type": "string"
-                }
-            },
-            "required": [
-                "authorizationUrl",
-                "refreshUrl",
-                "scopes",
-                "tokenUrl"
-            ],
-            "type": "object"
-        },
         "OAuthFlows": {
             "description": "Allows configuration of the supported OAuth Flows",
             "properties": {
                 "authorizationCode": {
-                    "$ref": "#/definitions/OAuthFlow",
+                    "$ref": "#/definitions/AuthorizationCodeOAuthFlow",
                     "description": "Configuration for the OAuth Authorization Code flow. Previously called accessCode in OpenAPI 2.0."
                 },
                 "clientCredentials": {
-                    "$ref": "#/definitions/OAuthFlow",
+                    "$ref": "#/definitions/ClientCredentialsOAuthFlow",
                     "description": "Configuration for the OAuth Client Credentials flow. Previously called application in OpenAPI 2.0"
                 },
                 "implicit": {
-                    "$ref": "#/definitions/OAuthFlow",
+                    "$ref": "#/definitions/ImplicitOAuthFlow",
                     "description": "Configuration for the OAuth Implicit flow"
                 },
                 "password": {
-                    "$ref": "#/definitions/OAuthFlow",
+                    "$ref": "#/definitions/PasswordOAuthFlow",
                     "description": "Configuration for the OAuth Resource Owner Password flow"
                 }
             },
@@ -1213,6 +1262,31 @@
                     "type": "object"
                 }
             },
+            "type": "object"
+        },
+        "PasswordOAuthFlow": {
+            "description": "Configuration details for a supported OAuth Flow",
+            "properties": {
+                "refreshUrl": {
+                    "description": "The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL. The OAuth2\nstandard requires the use of TLS.",
+                    "type": "string"
+                },
+                "scopes": {
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "description": "The available scopes for the OAuth2 security scheme. A map between the scope name and a short\ndescription for it. The map MAY be empty.",
+                    "type": "object"
+                },
+                "tokenUrl": {
+                    "description": "The token URL to be used for this flow. This MUST be in the form of a URL. The OAuth2 standard\nrequires the use of TLS.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "scopes",
+                "tokenUrl"
+            ],
             "type": "object"
         },
         "PushNotificationAuthenticationInfo": {
