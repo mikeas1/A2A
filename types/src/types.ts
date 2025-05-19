@@ -402,17 +402,17 @@ export interface OpenIdConnectSecurityScheme extends SecuritySchemeBase {
 /** Allows configuration of the supported OAuth Flows */
 export interface OAuthFlows {
   /** Configuration for the OAuth Authorization Code flow. Previously called accessCode in OpenAPI 2.0. */
-  authorizationCode?: OAuthFlow;
+  authorizationCode?: AuthorizationCodeOAuthFlow;
   /** Configuration for the OAuth Client Credentials flow. Previously called application in OpenAPI 2.0 */
-  clientCredentials?: OAuthFlow;
+  clientCredentials?: ClientCredentialsOAuthFlow;
   /** Configuration for the OAuth Implicit flow */
-  implicit?: OAuthFlow;
+  implicit?: ImplicitOAuthFlow;
   /** Configuration for the OAuth Resource Owner Password flow */
-  password?: OAuthFlow;
+  password?: PasswordOAuthFlow;
 }
 
 /** Configuration details for a supported OAuth Flow */
-export interface OAuthFlow {
+export interface AuthorizationCodeOAuthFlow {
   /** 
    * The authorization URL to be used for this flow. This MUST be in the form of a URL. The OAuth2
    * standard requires the use of TLS
@@ -427,7 +427,64 @@ export interface OAuthFlow {
    * The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL. The OAuth2
    * standard requires the use of TLS.
    */
-  refreshUrl: string;
+  refreshUrl?: string;
+  /**
+   * The available scopes for the OAuth2 security scheme. A map between the scope name and a short
+   * description for it. The map MAY be empty.
+   */
+  scopes: { [name: string]: string };
+}
+
+/** Configuration details for a supported OAuth Flow */
+export interface ClientCredentialsOAuthFlow {
+  /**
+   * The token URL to be used for this flow. This MUST be in the form of a URL. The OAuth2 standard
+   * requires the use of TLS.
+   */
+  tokenUrl: string;
+  /**
+   * The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL. The OAuth2
+   * standard requires the use of TLS.
+   */
+  refreshUrl?: string;
+  /**
+   * The available scopes for the OAuth2 security scheme. A map between the scope name and a short
+   * description for it. The map MAY be empty.
+   */
+  scopes: { [name: string]: string };
+}
+
+/** Configuration details for a supported OAuth Flow */
+export interface ImplicitOAuthFlow {
+  /** 
+   * The authorization URL to be used for this flow. This MUST be in the form of a URL. The OAuth2
+   * standard requires the use of TLS
+   */
+  authorizationUrl: string;
+  /**
+   * The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL. The OAuth2
+   * standard requires the use of TLS.
+   */
+  refreshUrl?: string;
+  /**
+   * The available scopes for the OAuth2 security scheme. A map between the scope name and a short
+   * description for it. The map MAY be empty.
+   */
+  scopes: { [name: string]: string };
+}
+
+/** Configuration details for a supported OAuth Flow */
+export interface PasswordOAuthFlow {
+  /**
+   * The token URL to be used for this flow. This MUST be in the form of a URL. The OAuth2 standard
+   * requires the use of TLS.
+   */
+  tokenUrl: string;
+  /**
+   * The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL. The OAuth2
+   * standard requires the use of TLS.
+   */
+  refreshUrl?: string;
   /**
    * The available scopes for the OAuth2 security scheme. A map between the scope name and a short
    * description for it. The map MAY be empty.
