@@ -133,7 +133,7 @@ def create_send_params(
     send_params: dict[str, Any] = {
         'message': {
             'role': 'user',
-            'parts': [{'type': 'text', 'text': text}],
+            'parts': [{'kind': 'text', 'text': text}],
             'messageId': uuid4().hex,
         },
         'configuration': {
@@ -183,7 +183,7 @@ async def complete_task(
                 else (
                     next(
                         (
-                            f'stream message => role: {result.role.value}, type: {part.root.type}, text: {part.root.text}'
+                            f'stream message => role: {result.role.value}, kind: {part.root.kind}, text: {part.root.text}'
                             for part in result.parts
                             if isinstance(part.root, TextPart)
                         ),
@@ -192,7 +192,7 @@ async def complete_task(
                     if isinstance(result, Message)
                     else next(
                         (
-                            f'stream message => role: {msg.role.value}, type: {part.root.type}, text: {part.root.text}'
+                            f'stream message => role: {msg.role.value}, kind: {part.root.kind}, text: {part.root.text}'
                             for msg in result.history or []
                             for part in msg.parts
                             if isinstance(part.root, TextPart)
@@ -202,7 +202,7 @@ async def complete_task(
                     if isinstance(result, Task)
                     else next(
                         (
-                            f'stream message => role: {result.status.message.role.value}, type: {part.root.type}, text: {part.root.text}'
+                            f'stream message => role: {result.status.message.role.value}, kind: {part.root.kind}, text: {part.root.text}'
                             for part in (
                                 result.status.message.parts
                                 if result.status.message
@@ -215,7 +215,7 @@ async def complete_task(
                     if isinstance(result, TaskStatusUpdateEvent)
                     else next(
                         (
-                            f'stream artifact => type: {part.root.type}, text: {part.root.text}'
+                            f'stream artifact => kind: {part.root.kind}, text: {part.root.text}'
                             for part in result.artifact.parts
                             if isinstance(part.root, TextPart)
                         ),
