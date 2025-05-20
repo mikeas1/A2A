@@ -1,7 +1,5 @@
-import json
 import os
-from typing import Any
-from a2a.types import AgentCard
+from a2a.types import AgentCard, OAuth2SecurityScheme
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse, PlainTextResponse
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -19,42 +17,24 @@ class OAuth2Middleware(BaseHTTPMiddleware):
     """Starlette middleware that authenticates A2A access using an OAuth2 bearer token."""
     def __init__(self, app: Starlette, agent_card: AgentCard = None, public_paths: list[str] = None):
         super().__init__(app)
+
         self.agent_card = agent_card
         self.public_paths = set(public_paths or [])
-
-        # Process the AgentCard to identify what (if any) Security Requirements are defined at the root of the
-        # AgentCard, indicating agent-level authentication/authorization.
-
-        # Use app state for this demonstration (simplicity)
         self.a2a_auth = {}
 
-        # Process the Authentication Requirements Object
-        if agent_card.authentication:
-            credentials = json.loads(agent_card.authentication.credentials or '{}')
-            if 'scopes' in credentials:
-                self.a2a_auth = { 'required_scopes': credentials['scopes'].keys() }
+        # Process the Security Requirements Object
+        for sec_req in agent_card.security or []:
+            if not sec_req:
+                # Allow anonymous
+                break
 
-        # # Process the Security Requirements Object
-        # for sec_req in agent_card.security or []:
-        #     # Since we pre-validated (non-exhaustive) the used parts of the Security Schemes and Security
-        #     # Requirements, the code below WILL NOT do any validation.
+            for name, scopes in sec_req.items():
+                sec_scheme = self.agent_card.securitySchemes[name]
 
-        #     # An empty Security Requirement Object means you allow anonymous, no need to process any other Security
-        #     # Requirements Objects
-        #     if not sec_req:
-        #         break
+                if not isinstance(sec_scheme.root, OAuth2SecurityScheme) or sec_scheme.root.flows.clientCredentials is None:
+                    raise NotImplementedError('Only OAuth2SecurityScheme -> ClientCredentialsOAuthFlow is supported.')
 
-        #     # Demonstrate how one could process the Security Requirements to configure the machinery used to
-        #     # authenticate and/or authorize agent interactions.
-        #     #
-        #     # Note: This is written purely to support the sample and is for demonstration purposes only.
-        #     for name, scopes in sec_req.items():
-        #         # sec_scheme = self.agent_card.securitySchemes[name]
-
-        #         # if not isinstance(sec_scheme, OAuth2SecurityScheme) or sec_scheme.flows.authorizationCode is None:
-        #         #     raise NotImplementedError('Only OAuth2SecurityScheme -> ClientCredentialsOAuthFlow is supported.')
-
-        #         self.a2a_auth = { 'required_scopes': scopes }
+                self.a2a_auth = { 'required_scopes': scopes }
 
     
     async def dispatch(self, request: Request, call_next):
