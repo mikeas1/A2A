@@ -100,7 +100,7 @@ def get_employee_id_by_email(work_email: str) -> dict[str, Any] | None:
 
 class ResponseFormat(BaseModel):
     """Respond to the user in this format."""
-    status: Literal['completed', 'input-required', 'rejected', 'failed'] = 'failed'
+    status: Literal['completed', 'input-required', 'failed'] = 'failed'
     message: str
 
 
@@ -117,7 +117,7 @@ class HRAgent:
     RESPONSE_FORMAT_INSTRUCTION: str = (
         'Set the status to "completed" if the request has been fully processed.'
         'Set the status to "input-required" if the tool response indicates that user input is needed to proceed.'
-        'If the tool response contains an AccessDeniedInterrupt error, set the message to "The user denied the authorization request", and set the status to "rejected".'
+        'If the tool response contains an AccessDeniedInterrupt error, set the message to "The user denied the authorization request", and set the status to "failed".'
         'For any other tool error, set the status to "failed".'
     )
 
