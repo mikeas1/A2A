@@ -51,6 +51,7 @@ A2A revolves around several key concepts. For detailed explanations, please refe
 - **Streaming (SSE):** Real-time, incremental updates for tasks (status changes, artifact chunks) delivered via Server-Sent Events.
 - **Push Notifications:** Asynchronous task updates delivered via server-initiated HTTP POST requests to a client-provided webhook URL, for long-running or disconnected scenarios.
 - **Context:** An optional, server-generated identifier to logically group related tasks.
+- **Extension:** A mechanism for agents to provide additional functionality or data beyond the core A2A specification.
 
 ## 3. Transport and Format
 
@@ -194,11 +195,27 @@ Specifies optional A2A protocol features supported by the agent.
 --8<-- "types/src/types.ts:AgentCapabilities"
 ```
 
-| Field Name               | Type      | Required | Default | Description                                                                          |
-| :----------------------- | :-------- | :------- | :------ | :----------------------------------------------------------------------------------- |
-| `streaming`              | `boolean` | No       | `false` | Indicates support for SSE streaming methods (`message/stream`, `tasks/resubscribe`). |
-| `pushNotifications`      | `boolean` | No       | `false` | Indicates support for push notification methods (`tasks/pushNotificationConfig/*`).  |
-| `stateTransitionHistory` | `boolean` | No       | `false` | Placeholder for future feature: exposing detailed task status change history.        |
+| Field Name               | Type             | Required | Default | Description                                                                          |
+| :----------------------- | :--------------- | :------- | :------ | :----------------------------------------------------------------------------------- |
+| `streaming`              | `boolean`        | No       | `false` | Indicates support for SSE streaming methods (`message/stream`, `tasks/resubscribe`). |
+| `pushNotifications`      | `boolean`        | No       | `false` | Indicates support for push notification methods (`tasks/pushNotificationConfig/*`).  |
+| `stateTransitionHistory` | `boolean`        | No       | `false` | Placeholder for future feature: exposing detailed task status change history.        |
+| `extensions`             | `AgentExtension` | No       | `[]`    | A list of extensions supported by this agent.                                        |
+
+#### 5.5.2.1. `AgentExtension` Object
+
+Specifies an extension to the A2A protocol supported by the agent.
+
+```ts { .no-copy }
+--8<-- "types/src/types.ts:AgentExtension"
+```
+| Field Name    | Type      | Required | Description                                                                                 |
+| :-------------| :-------- | :------- | :------------------------------------------------------------------------------------------ |
+| `uri`         | `string`  | Yes      | The URI for the supported extension.                                                        |
+| `required`    | `boolean` | No       | Whether the agent requires clients to follow some protocol logic specific to the extension. |
+| `description` | `string`  | No       | A description of how the extension is used by the agent.                                    |
+| `params`      | `object`  | No       | Configuration parameters specific to the extension                                          |
+
 
 #### 5.5.3. `SecurityScheme` Object
 
