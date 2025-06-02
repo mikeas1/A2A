@@ -32,7 +32,7 @@ export interface AgentCapabilities {
 
 // --8<-- [start:AgentExtension]
 /**
- * Defines an extension supported by the agent.
+ * A declaration of an extension supported by an Agent.
  */
 export interface AgentExtension {
   /** The URI of the extension. */
