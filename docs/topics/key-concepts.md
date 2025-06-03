@@ -73,6 +73,6 @@ The Agent2Agent (A2A) protocol is built around a set of core concepts that defin
 - **Agent Discovery:** The process by which clients find Agent Cards to learn about available A2A Servers and their capabilities.
     - Learn more about [Agent Discovery](./agent-discovery.md).
 - **Extensions:** A2A allows agents to declare custom protocol extensions as part of their AgentCard.
-    - Learn more about [Extensions](./extensions.md).
+    - More documentation coming soon.
 
 By understanding these core components and mechanisms, developers can effectively design, implement, and utilize A2A for building interoperable and collaborative AI agent systems.
