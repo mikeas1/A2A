@@ -215,7 +215,7 @@
             "type": "object"
         },
         "AgentExtension": {
-            "description": "Defines an extension supported by the agent.",
+            "description": "A declaration of an extension supported by an Agent.",
             "properties": {
                 "description": {
                     "description": "A description of how this agent uses this extension.",
