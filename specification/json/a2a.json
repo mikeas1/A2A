@@ -129,14 +129,14 @@
                     "description": "Optional capabilities supported by the agent."
                 },
                 "defaultInputModes": {
-                    "description": "The set of interaction modes that the agent supports across all skills. This can be overridden per-skill.\nSupported mime types for input.",
+                    "description": "The set of interaction modes that the agent supports across all skills. This can be overridden per-skill.\nSupported media types for input.",
                     "items": {
                         "type": "string"
                     },
                     "type": "array"
                 },
                 "defaultOutputModes": {
-                    "description": "Supported mime types for output.",
+                    "description": "Supported media types for output.",
                     "items": {
                         "type": "string"
                     },
@@ -277,7 +277,7 @@
                     "type": "string"
                 },
                 "inputModes": {
-                    "description": "The set of interaction modes that the skill supports\n(if different than the default).\nSupported mime types for input.",
+                    "description": "The set of interaction modes that the skill supports\n(if different than the default).\nSupported media types for input.",
                     "items": {
                         "type": "string"
                     },
@@ -288,7 +288,7 @@
                     "type": "string"
                 },
                 "outputModes": {
-                    "description": "Supported mime types for output.",
+                    "description": "Supported media types for output.",
                     "items": {
                         "type": "string"
                     },
@@ -1392,6 +1392,10 @@
             "properties": {
                 "authentication": {
                     "$ref": "#/definitions/PushNotificationAuthenticationInfo"
+                },
+                "id": {
+                    "description": "Push Notification ID - created by server to support multiple callbacks",
+                    "type": "string"
                 },
                 "token": {
                     "description": "Token unique to this task/session.",

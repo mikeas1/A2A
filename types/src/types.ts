@@ -74,10 +74,10 @@ export interface AgentSkill {
   /**
    * The set of interaction modes that the skill supports
    * (if different than the default).
-   * Supported mime types for input.
+   * Supported media types for input.
    */
   inputModes?: string[];
-  /** Supported mime types for output. */
+  /** Supported media types for output. */
   outputModes?: string[];
 }
 // --8<-- [end:AgentSkill]
@@ -123,10 +123,10 @@ export interface AgentCard {
   security?: { [scheme: string]: string[] }[];
   /**
    * The set of interaction modes that the agent supports across all skills. This can be overridden per-skill.
-   * Supported mime types for input.
+   * Supported media types for input.
    */
   defaultInputModes: string[];
-  /** Supported mime types for output. */
+  /** Supported media types for output. */
   defaultOutputModes: string[];
   /** Skills are a unit of capability that an agent can perform. */
   skills: AgentSkill[];
@@ -411,6 +411,8 @@ export interface PushNotificationAuthenticationInfo {
 // --8<-- [start:PushNotificationConfig]
 /**Configuration for setting up push notifications for task updates. */
 export interface PushNotificationConfig {
+  /** Push Notification ID - created by server to support multiple callbacks */
+  id?: string
   /** URL for sending the push notifications. */
   url: string;
   /** Token unique to this task/session. */

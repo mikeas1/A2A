@@ -5,7 +5,7 @@
 - Python 3.13 or higher.
 - Access to a terminal or command prompt.
 - Git, for cloning the repository.
-- A code editor (e.g., VS Code) is recommended.
+- A code editor (e.g., Visual Studio Code) is recommended.
 
 ## Clone the Repository
 
@@ -41,7 +41,7 @@ We recommend using a virtual environment for Python projects. The A2A Python SDK
 2. **Install needed Python dependencies along with the A2A SDK and its dependencies:**
 
     ```bash
-    pip install -r requirements.txt
+    pip install -r samples/python/requirements.txt
     ```
 
 ## Verify Installation
