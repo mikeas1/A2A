@@ -209,13 +209,13 @@ Specifies an extension to the A2A protocol supported by the agent.
 ```ts { .no-copy }
 --8<-- "types/src/types.ts:AgentExtension"
 ```
+
 | Field Name    | Type      | Required | Description                                                                                 |
 | :-------------| :-------- | :------- | :------------------------------------------------------------------------------------------ |
 | `uri`         | `string`  | Yes      | The URI for the supported extension.                                                        |
 | `required`    | `boolean` | No       | Whether the agent requires clients to follow some protocol logic specific to the extension. Clients should expect failures when attempting to interact with a server that requires an extension the client does not support. |
 | `description` | `string`  | No       | A description of how the extension is used by the agent.                                    |
 | `params`      | `object`  | No       | Configuration parameters specific to the extension                                          |
-
 
 #### 5.5.3. `SecurityScheme` Object
 
