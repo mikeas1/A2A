@@ -200,7 +200,7 @@ Specifies optional A2A protocol features supported by the agent.
 | `streaming`              | `boolean`        | No       | `false` | Indicates support for SSE streaming methods (`message/stream`, `tasks/resubscribe`). |
 | `pushNotifications`      | `boolean`        | No       | `false` | Indicates support for push notification methods (`tasks/pushNotificationConfig/*`).  |
 | `stateTransitionHistory` | `boolean`        | No       | `false` | Placeholder for future feature: exposing detailed task status change history.        |
-| `extensions`             | `AgentExtension` | No       | `[]`    | A list of extensions supported by this agent.                                        |
+| `extensions`             | [`AgentExtension`[]](#5521-agentextension-object) | No       | `[]`    | A list of extensions supported by this agent.                                        |
 
 #### 5.5.2.1. `AgentExtension` Object
 
