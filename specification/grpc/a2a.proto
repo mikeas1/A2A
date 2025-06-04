@@ -243,6 +243,8 @@ message Message {
   // protolint:enable REPEATED_FIELD_NAMES_PLURALIZED
   // Any optional metadata to provide along with the message.
   google.protobuf.Struct metadata = 6;
+  // Extensions that are present or contributed to this Message.
+  repeated string extensions = 7;
 }
 
 // Artifacts are the container for task completed results. These are similar
@@ -259,6 +261,8 @@ message Artifact {
   repeated Part parts = 5;
   // Optional metadata included with the artifact.
   google.protobuf.Struct metadata = 6;
+  // Extensions that are present or contributed to this Artifact.
+  repeated string extensions = 7;
 }
 
 // TaskStatusUpdateEvent is a delta even on a task indicating that a task
