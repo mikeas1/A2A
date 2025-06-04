@@ -322,7 +322,7 @@
                     "type": "string"
                 },
                 "extensions": {
-                    "description": "Extensions that are present or contributed to this Artifact.",
+                    "description": "The URIs of extensions that are present or contributed to this Artifact.",
                     "items": {
                         "type": "string"
                     },
@@ -1123,7 +1123,7 @@
                     "type": "string"
                 },
                 "extensions": {
-                    "description": "Extensions that are present or contributed to this Message.",
+                    "description": "The URIs of extensions that are present or contributed to this Message.",
                     "items": {
                         "type": "string"
                     },

@@ -291,7 +291,7 @@ export interface Artifact {
   metadata?: {
     [key: string]: any;
   };
-  /** Extensions that are present or contributed to this Artifact. */
+  /** The URIs of extensions that are present or contributed to this Artifact. */
   extensions?: string[];
 }
 // --8<-- [end:Artifact]
@@ -307,7 +307,7 @@ export interface Message {
   metadata?: {
     [key: string]: any;
   };
-  /** Extensions that are present or contributed to this Message. */
+  /** The URIs of extensions that are present or contributed to this Message. */
   extensions?: string[];
   /** List of tasks referenced as context by this message.*/
   referenceTaskIds?: string[];
