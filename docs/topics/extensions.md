@@ -2,7 +2,7 @@
 
 ## Abstract
 
-Extensions are a means of extending the Agent2Agent (A2A) protocol with new data, requirements, methods, and state machines. Agents declare their support for extensions in their AgentCard, and clients can then opt in to the behavior offered by the extension as part of requests they make to the agent. Extensions are identified by a URI and defined by their extension specification. Anyone is able to define, publish, and implement an extension.
+Extensions are a means of extending the Agent2Agent (A2A) protocol with new data, requirements, methods, and state machines. Agents declare their support for extensions in their AgentCard, and clients can then opt-in to the behavior offered by the extension as part of requests they make to the agent. Extensions are identified by a URI and defined by their extension specification. Anyone is able to define, publish, and implement an extension.
 
 ## Introduction
 
@@ -10,7 +10,7 @@ The core A2A protocol is a solid basis for enabling communication between agents
 
 ### Scope of Extensions
 
-The exact set of possible ways to use extensions is intentionally not defined. This is to faciliate the ability to use extensions to expand A2A beyond currently known use cases. However, some use cases are clearly forseeable, such as:
+The exact set of possible ways to use extensions is intentionally not defined. This is to facilitate the ability to use extensions to expand A2A beyond currently known use cases. However, some use cases are clearly forseeable, such as:
 
 - Exposing new information in the AgentCard. An extension may not impact the request/response flow at all -- it can be simply used as a way to convey additional structured information to clients via the AgentCard. We refer to these as *data-only extensions*.
 - Overlaying additional structure and state change requirements on the core request/response messages. An extension could, for example, require that all messages use DataParts that adhere to a specific schema. This type of extension effectively acts as a profile on the core A2A protocol, narrowing the space of allowed values. We refer to these as *profile extensions*.
@@ -85,7 +85,8 @@ Once the agent has identified all activated extensions, the response should incl
 
 ## Implementation Considerations
 
-<!-- TODO -->
+TODO
 
 - Idea is to publish a package that contains the implementation logic for your extension
+
 - Insertion into your A2A server/client should be as simple as, e.g., `.use(MyExtension)`
