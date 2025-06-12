@@ -26,6 +26,7 @@ These limitations exist to prevent extensions from breaking core type validation
 ### Architecture Overview
 
 [TODO: Diagram]
+
 - Extensions are defined by a specification document
 - The specification document defines the identifiers for the extension
 - The AgentCard declares support for an extension by referencing the identifier and providing any configuration
