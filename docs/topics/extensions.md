@@ -2,7 +2,7 @@
 
 ## Abstract
 
-Extensions are a means of extending the Agent2Agent (A2A) protocol with new data, requirements, methods, and state machines. Agents declare their support for extensions in their AgentCard, and clients can then opt-in to the behavior offered by the extension as part of requests they make to the agent. Extensions are identified by a URI and defined by their extension specification. Anyone is able to define, publish, and implement an extension.
+Extensions are a means of extending the Agent2Agent (A2A) protocol with new data, requirements, methods, and state machines. Agents declare their support for extensions in their [`AgentCard`](/specification/#5-agent-discovery-the-agent-card), and clients can then opt-in to the behavior offered by the extension as part of requests they make to the agent. Extensions are identified by a URI and defined by their extension specification. Anyone is able to define, publish, and implement an extension.
 
 ## Introduction
 
@@ -12,8 +12,8 @@ The core A2A protocol is a solid basis for enabling communication between agents
 
 The exact set of possible ways to use extensions is intentionally not defined. This is to facilitate the ability to use extensions to expand A2A beyond currently known use cases. However, some use cases are clearly forseeable, such as:
 
-- Exposing new information in the AgentCard. An extension may not impact the request/response flow at all -- it can be simply used as a way to convey additional structured information to clients via the AgentCard. We refer to these as *data-only extensions*.
-- Overlaying additional structure and state change requirements on the core request/response messages. An extension could, for example, require that all messages use DataParts that adhere to a specific schema. This type of extension effectively acts as a profile on the core A2A protocol, narrowing the space of allowed values. We refer to these as *profile extensions*.
+- Exposing new information in the `AgentCard`. An extension may not impact the request/response flow at all -- it can be simply used as a way to convey additional structured information to clients via the `AgentCard`. We refer to these as *data-only extensions*.
+- Overlaying additional structure and state change requirements on the core request/response messages. An extension could, for example, require that all messages use `DataPart`s that adhere to a specific schema. This type of extension effectively acts as a profile on the core A2A protocol, narrowing the space of allowed values. We refer to these as *profile extensions*.
 - Adding new RPC methods entirely. Extensions may define that the agent implements more than the core set of protocol methods. We refer to these as *method extensions*.
 
 There are some changes to the protocol that extensions *do not* allow. These are:
@@ -29,7 +29,7 @@ These limitations exist to prevent extensions from breaking core type validation
 
 - Extensions are defined by a specification document
 - The specification document defines the identifiers for the extension
-- The AgentCard declares support for an extension by referencing the identifier and providing any configuration
+- The `AgentCard` declares support for an extension by referencing the identifier and providing any configuration
 - An implementation is built according to the specification
 - A client has support for various extensions
 - The client indicates extensions to activate in its request to the agent
@@ -48,9 +48,9 @@ Agents declare their support for extensions in their `AgentCard` by including `A
 
 While extensions are a means of enabling additional functionality, we anticipate that some agents will have stricter requirements than those expressible by the core A2A protocol. For example, an agent may require that all incoming messages are cryptographically signed by their author. Extensions that are declared `required` are intended to support this use case.
 
-When an AgentCard declares a required extension, this is a signal to clients that some aspect of the extension impacts how requests are structured. Agents should not mark data-only extensions as required, since there is no direct impact on how requests are made to the agent.
+When an `AgentCard` declares a required extension, this is a signal to clients that some aspect of the extension impacts how requests are structured. Agents should not mark data-only extensions as required, since there is no direct impact on how requests are made to the agent.
 
-If an AgentCard declares a required extension, and the client does not request activation of that required extension, Agents should return reject the incoming request and return an appropriate error code.
+If an `AgentCard` declares a required extension, and the client does not request activation of that required extension, Agents should return reject the incoming request and return an appropriate error code.
 
 If a client requests extension activation, but does not follow an extension-defined protocol, the Agent should reject the request and return an appropriate validation failure message.
 
