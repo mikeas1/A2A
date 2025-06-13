@@ -107,7 +107,7 @@ Dependencies are declared within the extension's specification, not in the `Agen
 
 ## Extension Activation
 
-Extensions should default to being inactive. This provides a "default to baseline" experience, where extension-unaware clients are not burdened by the details and data provided by an extension. Instead, clients and agents perform negotiation to determine which extensions are active for a request. This negotiation is initiated by the client including an `X-A2A-Extensions` header in the HTTP request to the agent. The value of this header should be a list of extension URIs that the client is intending to activate.
+Extensions should default to being inactive. This provides a "default to baseline" experience, where extension-unaware clients are not burdened by the details and data provided by an extension. Instead, clients and agents perform negotiation to determine which extensions are active for a request. This negotiation is initiated by the client including the `X-A2A-Extensions` header in the HTTP request to the agent. The value of this header should be a list of extension URIs that the client is intending to activate.
 
 Clients may request activation of any extension. Agents are responsible for identifying supported extensions in the request and performing the activation. Any requested extensions that are not supported by the agent can be ignored.
 
@@ -117,7 +117,7 @@ Some extensions may have additional pre-requisites for activation. For example, 
 
 If a client requests activation of an extension with a required dependency, that client must also request activation of, and adhere to requirements of, that dependent extension. If the client does not request all required dependencies for a requested extension, the server may fail the request with an appropriate error.
 
-Once the agent has identified all activated extensions, the response should include an `X-A2A-Extensions` header identifying all extensions that were activated.
+Once the agent has identified all activated extensions, the response should include the `X-A2A-Extensions` header identifying all extensions that were activated.
 
 An example request showing extension activation:
 
