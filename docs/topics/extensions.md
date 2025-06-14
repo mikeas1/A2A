@@ -175,25 +175,25 @@ While the A2A protocol defines the "what" of extensions, this section provides g
 
 Extension specifications will inevitably evolve. It is crucial to have a clear versioning strategy to ensure that clients and agents can negotiate compatible implementations.
 
-  * **Recommendation**: Use the extension's URI as the primary version identifier. We recommend including a version number directly in the URI path, such as `https://example.com/ext/my-extension/v1` or `https://example.com/ext/my-extension/v2`.
-  * **Breaking Changes**: A new URI **MUST** be used when introducing a breaking change to an extension's logic, data structures, or required parameters. This prevents ambiguity and ensures that an agent supporting `/v1` does not incorrectly process a `/v2` request.
-  * **Handling Mismatches**: If a client requests a version of an extension that the agent does not support (e.g., client requests `/v2` but the agent only supports `/v1`), the agent **SHOULD** ignore the activation request for that extension. The agent **MUST NOT** attempt to "fall back" to a different version, as the client's logic is explicitly tied to the requested version.
+- **Recommendation**: Use the extension's URI as the primary version identifier. We recommend including a version number directly in the URI path, such as `https://example.com/ext/my-extension/v1` or `https://example.com/ext/my-extension/v2`.
+- **Breaking Changes**: A new URI **MUST** be used when introducing a breaking change to an extension's logic, data structures, or required parameters. This prevents ambiguity and ensures that an agent supporting `/v1` does not incorrectly process a `/v2` request.
+- **Handling Mismatches**: If a client requests a version of an extension that the agent does not support (e.g., client requests `/v2` but the agent only supports `/v1`), the agent **SHOULD** ignore the activation request for that extension. The agent **MUST NOT** attempt to "fall back" to a different version, as the client's logic is explicitly tied to the requested version.
 
 ### Discoverability and Publication
 
 For an extension to be useful, other developers need to be able to find its specification and understand how to use it.
 
-  * **Specification Hosting**: The extension specification document **SHOULD** be hosted at the extension's URI. This allows developers to easily access the documentation by simply resolving the identifier.
-  * **Permanent Identifiers**: To prevent issues with broken links or changing domains, authors are encouraged to use a permanent identifier service, such as [w3id.org](https://w3id.org), for their extension URIs.
-  * **Community Registry (Future)**: In the future, the A2A community may establish a central registry for discovering and Browse available extensions.
+- **Specification Hosting**: The extension specification document **SHOULD** be hosted at the extension's URI. This allows developers to easily access the documentation by simply resolving the identifier.
+- **Permanent Identifiers**: To prevent issues with broken links or changing domains, authors are encouraged to use a permanent identifier service, such as [w3id.org](https://w3id.org), for their extension URIs.
+- **Community Registry (Future)**: In the future, the A2A community may establish a central registry for discovering and Browse available extensions.
 
 ### Packaging and Reusability
 
 To promote adoption, extension logic should be packaged into reusable libraries that can be easily integrated into existing A2A client and server applications.
 
-  * **Distribution**: An extension implementation should be distributed as a standard package for its language ecosystem (e.g., a PyPI package for Python, an npm package for TypeScript/JavaScript).
+- **Distribution**: An extension implementation should be distributed as a standard package for its language ecosystem (e.g., a PyPI package for Python, an npm package for TypeScript/JavaScript).
 
-  * **Simplified Integration**: The goal should be a near "plug-and-play" experience for developers. A well-designed extension package should allow a developer to add it to their server with minimal code, for example:
+- **Simplified Integration**: The goal should be a near "plug-and-play" experience for developers. A well-designed extension package should allow a developer to add it to their server with minimal code, for example:
 
     ```python
     # Hypothetical Python Server Integration
@@ -224,6 +224,6 @@ To promote adoption, extension logic should be packaged into reusable libraries 
 
 Extensions modify the core behavior of the A2A protocol and therefore introduce new security considerations.
 
-  * **Input Validation**: Any new data fields, parameters, or methods introduced by an extension **MUST** be rigorously validated by the implementation. Treat all extension-related data from an external party as untrusted input, unless there are protocol-defined means for establishing trust.
-  * **Scope of `required` extensions**: Be mindful when marking an extension as `required: true` in an `AgentCard`. This creates a hard dependency for all clients. Only use this for extensions that are fundamental to the agent's core function and security posture (e.g., a message signing extension).
-  * **Authentication and Authorization**: If an extension adds new methods, the implementation **MUST** ensure that these methods are subject to the same authentication and authorization checks as the core A2A methods. An extension **MUST NOT** provide a way to bypass the agent's primary security controls.
+- **Input Validation**: Any new data fields, parameters, or methods introduced by an extension **MUST** be rigorously validated by the implementation. Treat all extension-related data from an external party as untrusted input, unless there are protocol-defined means for establishing trust.
+- **Scope of `required` extensions**: Be mindful when marking an extension as `required: true` in an `AgentCard`. This creates a hard dependency for all clients. Only use this for extensions that are fundamental to the agent's core function and security posture (e.g., a message signing extension).
+- **Authentication and Authorization**: If an extension adds new methods, the implementation **MUST** ensure that these methods are subject to the same authentication and authorization checks as the core A2A methods. An extension **MUST NOT** provide a way to bypass the agent's primary security controls.
