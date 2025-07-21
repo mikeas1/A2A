@@ -90,6 +90,12 @@ export interface AgentSkill {
    * The set of supported output MIME types for this skill, overriding the agent's defaults.
    */
   outputModes?: string[];
+  /**
+   * Security schemes necessary for the agent to leverage this skill.
+   *
+   * @TJS-examples [[{"google": ["oidc"]}]]
+   */
+  security?: { [scheme: string]: string }[];
 }
 // --8<-- [end:AgentSkill]
 
@@ -316,7 +322,7 @@ export interface GetTaskPushNotificationConfigParams extends TaskIdParams {
 /**
  * Defines parameters for listing all push notification configurations associated with a task.
  */
-export interface ListTaskPushNotificationConfigParams extends TaskIdParams {}
+export interface ListTaskPushNotificationConfigParams extends TaskIdParams { }
 // --8<-- [end:ListTaskPushNotificationConfigParams]
 
 // --8<-- [start:DeleteTaskPushNotificationConfigParams]
@@ -590,7 +596,8 @@ export type SecurityScheme =
   | APIKeySecurityScheme
   | HTTPAuthSecurityScheme
   | OAuth2SecurityScheme
-  | OpenIdConnectSecurityScheme;
+  | OpenIdConnectSecurityScheme
+  | MutualTLSSecurityScheme;
 // --8<-- [end:SecurityScheme]
 
 // --8<-- [start:SecuritySchemeBase]
@@ -638,6 +645,13 @@ export interface HTTPAuthSecurityScheme extends SecuritySchemeBase {
 }
 // --8<-- [end:HTTPAuthSecurityScheme]
 
+// --8<-- [start:MutualTLSSecurityScheme]
+export interface MutualTLSSecurityScheme extends SecuritySchemeBase {
+  /** The type of the security scheme. Must be 'mutualTLS'. */
+  readonly type: "mutualTLS";
+}
+// --8<-- [end:MutualTLSSecurityScheme]
+
 // --8<-- [start:OAuth2SecurityScheme]
 /**
  * Defines a security scheme using OAuth 2.0.
@@ -647,6 +661,11 @@ export interface OAuth2SecurityScheme extends SecuritySchemeBase {
   readonly type: "oauth2";
   /** An object containing configuration information for the supported OAuth 2.0 flows. */
   flows: OAuthFlows;
+  /**
+   * URL to the oauth2 authorization server metadata
+   * [RFC8414](https://datatracker.ietf.org/doc/html/rfc8414). TLS is required.
+   */
+  oauth2MetadataUrl?: string;
 }
 // --8<-- [end:OAuth2SecurityScheme]
 
