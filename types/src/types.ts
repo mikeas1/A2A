@@ -172,6 +172,11 @@ export interface AgentCard {
   /**
    * A list of security requirement objects that apply to all agent interactions. Each object
    * lists security schemes that can be used. Follows the OpenAPI 3.0 Security Requirement Object.
+   * This list can be seen as an OR of ANDs. Each object in the list describes one possible
+   * set of security requirements that must be present on a request. This allows specifying,
+   * for example, "callers must either use OAuth OR an API Key AND mTLS."
+   *
+   * @TJS-examples [[{"oauth": ["read"]}, {"api-key": [], "mtls": []}]]
    */
   security?: { [scheme: string]: string[] }[];
   /**
