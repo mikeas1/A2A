@@ -390,7 +390,10 @@
                     ],
                     "items": {
                         "additionalProperties": {
-                            "type": "string"
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
                         },
                         "type": "object"
                     },

@@ -95,7 +95,7 @@ export interface AgentSkill {
    *
    * @TJS-examples [[{"google": ["oidc"]}]]
    */
-  security?: { [scheme: string]: string }[];
+  security?: { [scheme: string]: string[] }[];
 }
 // --8<-- [end:AgentSkill]
 
