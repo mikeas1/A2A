@@ -92,6 +92,9 @@ export interface AgentSkill {
   outputModes?: string[];
   /**
    * Security schemes necessary for the agent to leverage this skill.
+   * As in the overall AgentCard.security, this list represents a logical OR of security
+   * requirement objects. Each object is a set of security schemes that must be used together
+   * (a logical AND).
    *
    * @TJS-examples [[{"google": ["oidc"]}]]
    */

@@ -462,9 +462,9 @@ message AgentSkill {
   repeated string output_modes = 7;
   // protolint:disable REPEATED_FIELD_NAMES_PLURALIZED
   // Security schemes necessary for the agent to leverage this skill.
-  // As in the overall AgentCard.security, each entry in this list represents
-  // a possible security scheme, i.e. a logical OR for possible security
-  // requirements.
+  // As in the overall AgentCard.security, this list represents a logical OR of
+  // security requirement objects. Each object is a set of security schemes
+  // that must be used together (a logical AND).
   repeated Security security = 8;
 }
 
