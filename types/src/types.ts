@@ -330,7 +330,7 @@ export interface GetTaskPushNotificationConfigParams extends TaskIdParams {
 /**
  * Defines parameters for listing all push notification configurations associated with a task.
  */
-export interface ListTaskPushNotificationConfigParams extends TaskIdParams {}
+export interface ListTaskPushNotificationConfigParams extends TaskIdParams { }
 // --8<-- [end:ListTaskPushNotificationConfigParams]
 
 // --8<-- [start:DeleteTaskPushNotificationConfigParams]
@@ -654,6 +654,9 @@ export interface HTTPAuthSecurityScheme extends SecuritySchemeBase {
 // --8<-- [end:HTTPAuthSecurityScheme]
 
 // --8<-- [start:MutualTLSSecurityScheme]
+/**
+ * Defines a security scheme using mTLS authentication.
+ */
 export interface MutualTLSSecurityScheme extends SecuritySchemeBase {
   /** The type of the security scheme. Must be 'mutualTLS'. */
   readonly type: "mutualTLS";
