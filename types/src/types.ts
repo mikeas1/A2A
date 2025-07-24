@@ -223,6 +223,8 @@ export interface AgentCard {
    * to authenticated users. Defaults to false.
    */
   supportsAuthenticatedExtendedCard?: boolean;
+  /** JSON Web Signatures computed for this AgentCard.  */
+  signatures?: AgentCardSignature[];
 }
 // --8<-- [end:AgentCard]
 
@@ -616,6 +618,24 @@ export interface TaskPushNotificationConfig {
   pushNotificationConfig: PushNotificationConfig;
 }
 // --8<-- [end:TaskPushNotificationConfig]
+
+// --8<-- [start:AgentCardSignature]
+/**
+ * AgentCardSignature represents a JWS signature of an AgentCard.
+ * This follows the JSON format of an RFC 7515 JSON Web Signature (JWS).
+ */
+export interface AgentCardSignature {
+  /**
+   * The protected JWS header for the signature. This is always a base64-encoded
+   * JSON object.
+   */
+  protected: string;
+  /** The computed signature. */
+  signature: string;
+  /** The unprotected JWS header values. */
+  header?: { [key: string]: any };
+}
+// --8<-- [end:AgentCardSignature]
 
 // --8<-- [start:SecurityScheme]
 /**

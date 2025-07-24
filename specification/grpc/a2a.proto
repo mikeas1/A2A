@@ -386,6 +386,8 @@ message AgentCard {
   // the user is authenticated, i.e. is the card from .well-known
   // different than the card from GetAgentCard.
   bool supports_authenticated_extended_card = 13;
+  // Digital signatures computed for this AgentCard.
+  repeated AgentCardSignature signatures = 14;
 }
 
 // Represents information about the service provider of an agent.
@@ -448,6 +450,18 @@ message AgentSkill {
   repeated string input_modes = 6;
   // Possible output modalities produced
   repeated string output_modes = 7;
+}
+
+// AgentCardSignature represents a JWS signature of an AgentCard.
+// This follows the JSON format of an RFC 7515 JSON Web Signature (JWS).
+message AgentCardSignature {
+  // The protected JWS header for the signature. This is always a base64-encoded
+  // JSON object. Required.
+  string protected = 1;
+  // The computed signature. Required.
+  string signature = 2;
+  // The unprotected JWS header values.
+  google.protobuf.Struct header = 3;
 }
 
 message TaskPushNotificationConfig {
@@ -575,10 +589,8 @@ message PasswordOAuthFlow {
 
 ///////////// Request Messages ///////////
 message SendMessageRequest {
-  Message request = 1 [
-      (google.api.field_behavior) = REQUIRED,
-      json_name="message"
-  ];
+  Message request = 1
+      [(google.api.field_behavior) = REQUIRED, json_name = "message"];
   SendMessageConfiguration configuration = 2;
   google.protobuf.Struct metadata = 3;
 }
