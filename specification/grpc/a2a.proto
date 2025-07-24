@@ -68,7 +68,7 @@ service A2AService {
   rpc TaskSubscription(TaskSubscriptionRequest)
       returns (stream StreamResponse) {
     option (google.api.http) = {
-      get: "/v1/{name=tasks/*}:subscribe"
+      post: "/v1/{name=tasks/*}:subscribe"
     };
   }
 
@@ -575,10 +575,8 @@ message PasswordOAuthFlow {
 
 ///////////// Request Messages ///////////
 message SendMessageRequest {
-  Message request = 1 [
-      (google.api.field_behavior) = REQUIRED,
-      json_name="message"
-  ];
+  Message request = 1
+      [(google.api.field_behavior) = REQUIRED, json_name = "message"];
   SendMessageConfiguration configuration = 2;
   google.protobuf.Struct metadata = 3;
 }
