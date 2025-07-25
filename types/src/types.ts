@@ -356,7 +356,7 @@ export interface GetTaskPushNotificationConfigParams extends TaskIdParams {
 /**
  * Defines parameters for listing all push notification configurations associated with a task.
  */
-export interface ListTaskPushNotificationConfigParams extends TaskIdParams {}
+export interface ListTaskPushNotificationConfigParams extends TaskIdParams { }
 // --8<-- [end:ListTaskPushNotificationConfigParams]
 
 // --8<-- [start:DeleteTaskPushNotificationConfigParams]
@@ -628,6 +628,7 @@ export interface AgentCardSignature {
   /**
    * The protected JWS header for the signature. This is a Base64url-encoded
    * JSON object, as per RFC 7515.
+   */
   protected: string;
   /** The computed signature, Base64url-encoded. */
   signature: string;
