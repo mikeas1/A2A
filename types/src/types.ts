@@ -626,11 +626,10 @@ export interface TaskPushNotificationConfig {
  */
 export interface AgentCardSignature {
   /**
-   * The protected JWS header for the signature. This is always a base64-encoded
-   * JSON object.
-   */
+   * The protected JWS header for the signature. This is a Base64url-encoded
+   * JSON object, as per RFC 7515.
   protected: string;
-  /** The computed signature. */
+  /** The computed signature, Base64url-encoded. */
   signature: string;
   /** The unprotected JWS header values. */
   header?: { [key: string]: any };
