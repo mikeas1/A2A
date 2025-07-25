@@ -458,9 +458,9 @@ message AgentSkill {
 message AgentCardSignature {
   // The protected JWS header for the signature. This is always a base64-encoded
   // JSON object. Required.
-  string protected = 1;
+  string protected = 1 [(google.api.field_behavior) = REQUIRED];
   // The computed signature. Required.
-  string signature = 2;
+  string signature = 2 [(google.api.field_behavior) = REQUIRED];
   // The unprotected JWS header values.
   google.protobuf.Struct header = 3;
 }
