@@ -223,7 +223,7 @@ export interface AgentCard {
    * to authenticated users. Defaults to false.
    */
   supportsAuthenticatedExtendedCard?: boolean;
-  /** JSON Web Signatures computed for this AgentCard.  */
+  /** JSON Web Signatures computed for this AgentCard. */
   signatures?: AgentCardSignature[];
 }
 // --8<-- [end:AgentCard]
