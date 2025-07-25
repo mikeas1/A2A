@@ -272,17 +272,12 @@
                     "description": "The unprotected JWS header values.",
                     "type": "object"
                 },
-                "protected": {
-                    "description": "The protected JWS header for the signature. This is always a base64-encoded\nJSON object.",
-                    "type": "string"
-                },
                 "signature": {
-                    "description": "The computed signature.",
+                    "description": "The protected JWS header for the signature. This is a Base64url-encoded\nJSON object, as per RFC 7515.\nprotected: string;\n/** The computed signature, Base64url-encoded.",
                     "type": "string"
                 }
             },
             "required": [
-                "protected",
                 "signature"
             ],
             "type": "object"
