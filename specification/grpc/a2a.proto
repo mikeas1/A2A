@@ -456,10 +456,10 @@ message AgentSkill {
 // AgentCardSignature represents a JWS signature of an AgentCard.
 // This follows the JSON format of an RFC 7515 JSON Web Signature (JWS).
 message AgentCardSignature {
-  // The protected JWS header for the signature. This is always a base64-encoded
-  // JSON object. Required.
+  // The protected JWS header for the signature. This is always a
+  // base64url-encoded JSON object. Required.
   string protected = 1 [(google.api.field_behavior) = REQUIRED];
-  // The computed signature. Required.
+  // The computed signature, base64url-encoded. Required.
   string signature = 2 [(google.api.field_behavior) = REQUIRED];
   // The unprotected JWS header values.
   google.protobuf.Struct header = 3;
