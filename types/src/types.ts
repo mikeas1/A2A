@@ -66,7 +66,8 @@ export type SecurityScheme =
   | APIKeySecurityScheme
   | HTTPAuthSecurityScheme
   | OAuth2SecurityScheme
-  | OpenIdConnectSecurityScheme;
+  | OpenIdConnectSecurityScheme
+  | MutualTLSSecurityScheme;
 // --8<-- [end:SecurityScheme]
 
 // --8<-- [start:SecuritySchemeBase]
@@ -843,21 +844,6 @@ export interface TaskPushNotificationConfig {
   pushNotificationConfig: PushNotificationConfig;
 }
 // --8<-- [end:TaskPushNotificationConfig]
-
-// --8<-- [start:SecurityScheme]
-/**
- * Defines a security scheme that can be used to secure an agent's endpoints.
- * This is a discriminated union type based on the OpenAPI 3.0 Security Scheme Object.
- *
- * @see {@link https://swagger.io/specification/#security-scheme-object}
- */
-export type SecurityScheme =
-  | APIKeySecurityScheme
-  | HTTPAuthSecurityScheme
-  | OAuth2SecurityScheme
-  | OpenIdConnectSecurityScheme
-  | MutualTLSSecurityScheme;
-// --8<-- [end:SecurityScheme]
 
 // --8<-- [start:SecuritySchemeBase]
 /**
