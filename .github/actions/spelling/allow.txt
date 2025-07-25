@@ -24,6 +24,7 @@ Cpzuhi
 DDo
 DGT
 DHDe
+Djq
 Dotnet
 EBFF
 EUR
@@ -41,8 +42,10 @@ Genkit
 Ghw
 HBz
 HXo
+HKRMw
 Hackathon
 IFdvcmxk
+IMPCUk
 INR
 Ikp
 Imh
@@ -58,6 +61,7 @@ Jra
 KGgo
 KRW
 LHR
+LJcvt
 LLM
 LLMs
 Lix
@@ -92,6 +96,7 @@ Witteveen
 XBs
 Xca
 YQGt
+YTAKFW
 YTT
 YWFh
 YWdlbn
@@ -111,8 +116,10 @@ agentcard
 agentic
 agentskill
 ainvoke
+aldridge
 aparse
 aproject
+aprotocol
 arxiv
 askmarvin
 asyncclick
@@ -172,6 +179,7 @@ gpt
 gstatic
 gweb
 hqdefault
+hughesthe
 iat
 ietf
 inbox
